@@ -21,5 +21,6 @@ npm install express cors crypto k6
 npm install pm2 -g
 
 # Start server in cluster mode
+pm2 delete all
 pm2 start server.js -i max --name "stress-test"
 pm2 logs
