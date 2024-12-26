@@ -17,7 +17,7 @@ if [ ! -f "package.json" ]; then
 fi
 
 # Install dependencies
-npm install express cors crypto
+npm install express cors crypto k6
 npm install pm2 -g
 
 # Start server in cluster mode
