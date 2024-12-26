@@ -11,13 +11,15 @@ fi
 nvm install 20
 nvm use 20
 
-# Initialize npm project if package.json doesn't exist
+# Initialize npm project
 if [ ! -f "package.json" ]; then
    npm init -y
 fi
 
 # Install dependencies
 npm install express cors crypto
+npm install pm2 -g
 
-# Run server
-node server.js
+# Start server in cluster mode
+pm2 start server.js -i max --name "stress-test"
+pm2 logs

@@ -20,31 +20,37 @@ const getLocalIP = () => {
 };
 
 // Intensive CPU operations
-const hashingStress = () => {
+const hashingStress = async () => {
   for(let i = 0; i < 1000000; i++) {
     crypto.pbkdf2Sync('password', 'salt', 100000, 512, 'sha512');
   }
 };
 
 // Memory stress
-const memoryStress = () => {
-  const arrays = [];
-  for(let i = 0; i < 100; i++) {
-    arrays.push(new Array(1000000).fill(Math.random()));
-  }
-  return arrays.length;
+const memoryStress = async () => {
+    const arrays = [];
+    try {
+        while(true) {
+            arrays.push(new Array(1000000).fill(Math.random()));
+        }
+    } catch(e) {
+        return arrays.length;
+    }
 };
 
 // Network stress
-const networkStress = () => {
+const networkStress = async () => {
   const data = crypto.randomBytes(50 * 1024 * 1024); // 50MB
   return data.toString('base64');
 };
 
-app.get('/stress', (req, res) => {
-  hashingStress();
-  memoryStress();
-  const networkData = networkStress();
+app.get('/stress', async (req, res) => {
+  const [hash,memoryStress,networkStress] = await Promise.all([
+    await hashingStress(),
+    await memoryStress(),
+    await networkStress()
+  ])
+
   res.send(networkData);
 });
 
